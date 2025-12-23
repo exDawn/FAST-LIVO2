@@ -1,0 +1,92 @@
+common:
+  img_topic: "/camera/image_color"
+  lid_topic: "/velodyne_points"
+  imu_topic: "/imu/data"
+  img_en: 1
+  lidar_en: 1
+  ros_driver_bug_fix: false
+
+extrin_calib:
+  extrinsic_T: [-0.0, 0.0, -0.28]
+  extrinsic_R: [0.0, -1.0,  0.0,
+                1.0,  0.0,  0.0,
+                0.0,  0.0,  1.0]
+  Rcl: [0.032359, -0.999346, -0.016134,
+       -0.013132,  0.015715, -0.999790,
+        0.999390,  0.032564, -0.012615] 
+  Pcl: [0.015654,  0.236681, -0.169213]
+
+time_offset: 
+  imu_time_offset: 0.0
+  img_time_offset: 0.0
+  exposure_time_init: 0.0
+
+preprocess:
+  point_filter_num: 1
+  filter_size_surf: 0.1
+  lidar_type: 2 # 2是VELO
+  scan_line: 32
+  blind: 1.0
+
+vio:
+  max_iterations: 5
+  outlier_threshold: 1000 # 78 100 156 #100 200 500 700 infinite  # ↓ 从 1000 降低（城市动态更多）
+  img_point_cov: 200 # 100 1000   # ↑ 相机 10Hz + 室外光照
+  patch_size: 8
+  patch_pyrimid_level: 4  # ↓ 从 4 → 3（低频相机不需要太深金字塔）
+  normal_en: true
+  raycast_en: false
+  inverse_composition_en: false
+  exposure_estimate_en: true
+  inv_expo_cov: 0.1
+
+imu:
+  imu_en: true
+  imu_int_frame: 30
+  acc_cov: 1.0 # 0.2  # 比 AVIA 差，比 MARS 好
+  gyr_cov: 0.05 # 0.5
+  b_acc_cov: 0.0001 # 0.1  # Xsens 陀螺质量不错
+  b_gyr_cov: 0.0001 # 0.1
+
+lio:
+  max_iterations: 5
+  dept_err: 0.02
+  beam_err: 0.05
+  min_eigen_value: 0.0025 # 0.005
+  voxel_size: 2.0
+  max_layer: 2
+  max_points_num: 50
+  layer_init_num: [5, 5, 5, 5, 5]
+
+local_map:  
+  map_sliding_en: true
+  half_map_size: 100
+  sliding_thresh: 8
+
+uav:
+  imu_rate_odom: false
+  gravity_align_en: false
+
+publish:
+  dense_map_en: true
+  pub_effect_point_en: false 
+  pub_plane_en: false
+  pub_scan_num: 1
+  blind_rgb_points: 0.0
+
+evo:
+  seq_name: "UrbanNav-HK-Data20190428"
+  pose_output_en: true
+
+pcd_save:
+  pcd_save_en: false
+  type: 0 # 0: World Frame, 1: Body Frame;
+  colmap_output_en: false # need to set interval = -1
+  filter_size_pcd: 0.15
+  interval: -1
+  # how many LiDAR frames saved in each pcd file;
+  # -1 : all frames will be saved in ONE pcd file, may lead to memory crash when having too much frames.
+
+image_save:
+  img_save_en: false
+  interval: 1
