@@ -511,7 +511,7 @@ Visualization Manager:
       Value: false
     - Class: rviz/Image
       Enabled: true
-      Image Topic: /camera/image_color
+      Image Topic: /kitti/camera_color_left/image_raw
       Max Value: 1
       Median window: 5
       Min Value: 0
